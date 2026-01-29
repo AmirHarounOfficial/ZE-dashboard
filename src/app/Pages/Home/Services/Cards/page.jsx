@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import HomeAndCarServiceCardPages from './HomeAndCarServiceCard/pages'
 import StreetAssistantServiceCardPage from './StreetAssistantServiceCard/page';

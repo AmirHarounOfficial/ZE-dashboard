@@ -1,3 +1,4 @@
+"use client";
 import { Switch } from '@mui/material';
 import { styled } from '@mui/material/styles'
 import React from 'react'
