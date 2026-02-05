@@ -1,9 +1,8 @@
 "use client";
-import ViewPage from '@/app/Pages/services/View/_page';
-// import ViewPage from '@/app/Components/Dialogs/ViewPage'; // ✅ fixed: import client component instead of route page.js
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IMAGE_BASE_URL } from '../../../../config/imageUrl';
+import ViewPage from '@/app/Pages/Services/Home_Car_Module/Service/View/_page';
 
 function ServiceCard({service}) {
   const { t } = useTranslation();

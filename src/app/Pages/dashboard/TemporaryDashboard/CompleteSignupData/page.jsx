@@ -1,13 +1,21 @@
 "use client"
 import MainLayout from '@/app/Components/MainLayout/MainLayout';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import CompanyPage from './SignUpData/Company/page';
 import FreelancePage from './SignUpData/Freelance/page';
 
 function CompleteSignupDataPage() {
   const {t} = useTranslation();
-  const role = 'company' // 'company'  'freelance'
+
+  const [role, setRole] = useState(null);
+ useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setRole(userData?.role);
+    }
+  }, []);
   const [openCompany , setOpenCompany] = useState(false);
   const [openFreelance , setOpenFreelance] = useState(false);
 

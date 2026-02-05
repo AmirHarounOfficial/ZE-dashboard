@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import NewOrdersPage from './NewOrders/page'
 import CurrentOrdersPage from './CurrentOrders/page'

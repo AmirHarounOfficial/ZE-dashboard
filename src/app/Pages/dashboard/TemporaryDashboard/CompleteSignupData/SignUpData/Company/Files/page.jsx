@@ -2,19 +2,21 @@
 import { Dialog } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next';
-import ConfirmationDonePage from '../ConfirmationDone/page';
+import SecondFilePage from './SecondFile/page';
+import { useSignupData } from '../../../SignupDataContext';
 
 function FilesPage({open , setOpen ,setOpenPrevious}) {
   const {t}= useTranslation();
+  const { signupData, updateSignupData } = useSignupData();
 
     //Commercial registration
-    const [file, setFile] = useState(null);
+    const file = signupData.commercial_register;
     const [progress, setProgress] = useState(0);
   
     const handleFileChange = (e) => {
       const selectedFile = e.target.files[0];
       if (selectedFile && selectedFile.type === "application/pdf") {
-        setFile(selectedFile);
+        updateSignupData({ commercial_register: selectedFile });
   
         let uploaded = 0;
         const interval = setInterval(() => {
@@ -29,18 +31,18 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
     };
   
     const handleRemove = () => {
-      setFile(null);
+      updateSignupData({ commercial_register: null });
       setProgress(0);
     };
 
     //tax card
-    const [taxFile , setTaxFile]= useState(null);
+    const taxFile = signupData.tax_card;
     const[taxProgress , setTaxProgress]= useState(0);
     
     const handleTaxesFileChange = (e)=>{
       const selectTaxFile = e.target.files[0];
       if(selectTaxFile && selectTaxFile.type === "application/pdf" ){
-        setTaxFile(selectTaxFile);
+        updateSignupData({ tax_card: selectTaxFile });
         let uploaded=0;
         const interval = setInterval(() => {
           uploaded += 20;
@@ -53,11 +55,11 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
       }
     }
     const handleTaxRemove = () => {
-      setTaxFile(null);
+      updateSignupData({ tax_card: null });
       setTaxProgress(0);
     };
   
-  const [openConfirmation, setOpenConfirmation]= useState(false);
+    const [openSecondFile , setOpenSecondFile]= useState(false);
   const handlePrevious = () => {
     setOpen(false);
     setOpenPrevious(true);
@@ -65,7 +67,7 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
 
   const handleNext = () => {
     setOpen(false);
-    setOpenConfirmation(true);
+    setOpenSecondFile(true);
   }
   return (
     <>
@@ -252,6 +254,8 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
             <div className='flex flex-col gap-3 my-6'>
               <label>{t('Tax number')} </label>
               <input type="text" className='h-15 p-3 border border-[#C8C8C8] rounded-[3px] outline-none'
+                value={signupData.tax_number}
+                onChange={(e) => updateSignupData({ tax_number: e.target.value })}
                 placeholder={t('Enter the tax number')}/>
             </div>
 
@@ -267,7 +271,7 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
                 onClick={handleNext}
                 className="px-4 py-2 w-full h-13.5 bg-[var(--color-primary)] text-white rounded-[3px] cursor-pointer"
               >
-                {t('confirmation')}
+                {t('the next')}
               </button>
             </div>
 
@@ -275,8 +279,8 @@ function FilesPage({open , setOpen ,setOpenPrevious}) {
           </div>
         </section>
       </Dialog>
-      <ConfirmationDonePage open={openConfirmation} setOpen={setOpenConfirmation} />
 
+      <SecondFilePage open={openSecondFile} setOpen={setOpenSecondFile} setOpenPrevious={setOpen} />
     </>
   )
 }

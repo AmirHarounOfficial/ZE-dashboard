@@ -86,13 +86,13 @@ export const VerifyPhoneOtp = async(payload)=>{
   return response.data;
 }
 
-//❌Enter email to send otp type: forgot
+//✔️Enter email to send otp type: forgot
 export const sendEmail = async({email})=>{
   const response = await API.post('/provider/send-email-otp',{email,'type':'new'});
   return response.data;
 };
 
-//❌Verify email otp
+//✔️Verify email otp
 export const VerifyEmailOtp = async(payload)=>{
   const response = await API.post('/provider/verify-email-otp',payload);
   return response.data;
@@ -110,7 +110,16 @@ export const FirstRegistration = async(formData)=>{
   return response.data
 }
 
-
+export const SecondRegistration = async(formData,token)=>{
+  const response = await API.post('/provider/complete-profile', formData , {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  console.log('SecondRegistration',response.data);
+  return response.data
+}
 
 
 

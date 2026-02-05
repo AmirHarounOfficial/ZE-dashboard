@@ -587,8 +587,33 @@
   "Enter the verification code":"Enter the verification code",
   "Your journey starts now – enjoy our services!":"Your journey starts now – enjoy our services!",
   "Upload legal documents":"Upload legal documents",
+  "No services yet...":"No services yet...",
+  "Add your services to showcase them to clients and increase your profits.":"Add your services to showcase them to clients and increase your profits.",
+  "You must subscribe before adding a service.":"You must subscribe before adding a service.",
+  "Subscribe":"Subscribe",
+  "Please complete your details and subscribe before adding the service.":"Please complete your details and subscribe before adding the service.",
+  "Complete your data":"Complete your data",
+  "Lets check your updates today":"Lets check your updates today",
 
-  
+  "Battery operation":"Battery operation",
+  "Wheel repair":"Wheel repair",
+  "Car transport":"Car transport",
+  "Car unlock":"Car unlock",
+  "Fuel delivery":"Fuel delivery",
+  "General maintenance":"General maintenance",
+
+  "Activation of all services":"Activation of all services",
+  "Number of requests":"Number of requests",
+  "Activate the service":"Activate the service",
+  "Battery operating cost":"Battery operating cost",
+  "Enter the price":"Enter the price",
+  "Is the service available only during daytime hours?":"Is the service available only during daytime hours?",
+  "The inspection fee is charged only if the service is not completed.":"The inspection fee is charged only if the service is not completed.",
+  "Price of inspection":"Price of inspection",
+  "Price per kilometer":"Price per kilometer",
+  "Towing cost is low":"Towing cost is low",
+  "Car unlocking price":"Car unlocking price",
+  "You must verify that the customer owns the car before performing the service and upload proof of ownership after completion.":"You must verify that the customer owns the car before performing the service and upload proof of ownership after completion.",
   
   
   

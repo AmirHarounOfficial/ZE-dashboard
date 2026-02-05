@@ -1,4 +1,4 @@
-import { checkEmail, checkEnterPhone, checkPassEnterPhone, FirstRegistration, forgetPassEnterEmail, forgetPassEnterPhone, forgetPassVerifyEmailOtp, forgetPassVerifyPhoneOtp, getCurrentLogin, login, register, resetPassword, sendEmail, signup, UpdateInSignup, VerifyEmailOtp, VerifyPhoneOtp } from "@/redux/api/Auth/AuthApi";
+import { checkEmail, checkEnterPhone, checkPassEnterPhone, FirstRegistration, forgetPassEnterEmail, forgetPassEnterPhone, forgetPassVerifyEmailOtp, forgetPassVerifyPhoneOtp, getCurrentLogin, login, register, resetPassword, SecondRegistration, sendEmail, signup, UpdateInSignup, VerifyEmailOtp, VerifyPhoneOtp } from "@/redux/api/Auth/AuthApi";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from "../../../../config/api";
 import Cookies from "js-cookie";
@@ -183,7 +183,7 @@ export const VerifyPhoneOtpThunk= createAsyncThunk('auth/VerifyPhoneOtpThunk',
     }
   })
 
-//❌ send email to send otp for new email
+//✔️ send email to send otp for new email
 export const sendEmailThunk= createAsyncThunk('auth/sendEmailThunk',
   async({email} , thunkAPI)=>{
     try{
@@ -197,7 +197,7 @@ export const sendEmailThunk= createAsyncThunk('auth/sendEmailThunk',
   }
 )
 
-//❌forget password - verify email otp
+//✔️forget password - verify email otp
 export const VerifyEmailOtpThunk= createAsyncThunk('auth/VerifyEmailOtpThunk',
   async(payload , thunkAPI)=>{
     try{
@@ -217,6 +217,18 @@ export const FirstRegistrationThunk = createAsyncThunk('auth/FirstRegistrationTh
     try{
       const response = await FirstRegistration(formData)
       console.log('FirstRegistrationThunk' ,response );
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data?.message || "Failed to sign up data");
+    }
+  }
+)
+
+export const SecondRegistrationThunk = createAsyncThunk('auth/SecondRegistrationThunk',
+  async({formData,token} , {rejectWithValue})=>{
+    try{
+      const response = await SecondRegistration(formData,token)
+      console.log('SecondRegistrationThunk' ,response );
       return response
     }catch(error){
       return rejectWithValue(error.response?.data?.message || "Failed to sign up data");
@@ -488,6 +500,7 @@ const authSlice = createSlice({
         state.error = action.payload;
       })  
 /* ==========  ✔️NEW SIGNUP APIs ========== */
+      // FirstRegistrationThunk
       .addCase(FirstRegistrationThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -497,6 +510,19 @@ const authSlice = createSlice({
         state.registerationData = action.payload;
       })
       .addCase(FirstRegistrationThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // SecondRegistrationThunk
+      .addCase(SecondRegistrationThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(SecondRegistrationThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.registerationData = action.payload;
+      })
+      .addCase(SecondRegistrationThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

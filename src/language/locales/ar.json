@@ -587,6 +587,33 @@
   "Enter the verification code":"ادخل رمز التحقق",
   "Your journey starts now – enjoy our services":"رحلتك تبدأ الآن – استمتع بخدماتنا",
   "Upload legal documents":"أرفع الوثائق القانونية",
+  "No services yet...":"لا توجد خدمات بعد ...",
+  "Add your services to showcase them to clients and increase your profits.":"أضف خدماتك لعرضها للعملاء وزيادة أرباحك.",
+  "You must subscribe before adding a service.":"يجب الاشتراك قبل إضافة خدمة.",
+  "Subscribe":"اشترك",
+  "Please complete your details and subscribe before adding the service.":"يرجي استكمال بيانات و الاشتراك قبل إضافة خدمة",
+  "Complete your data":"استكمال بياناتك",
+  "Lets check your updates today":"دعنا نتحقق من التحديثات الخاصة بك اليوم",
+
+  "Battery operation":"تشغيل بطارية",
+  "Wheel repair":"أصلاح عجلات",
+  "Car transport":"نقل السيارة",
+  "Car unlock":"فتح سيارة",
+  "Fuel delivery":"توصيل الوقود",
+  "General maintenance":"صيانة عامة",
+
+  "Activation of all services":"تفعيل لكل الخدمات",
+  "Number of requests":"عدد الطلبات",
+  "Activate the service":"تفعيل الخدمة",
+  "Battery operating cost":"سعر تشغيل البطارية",
+  "Enter the price":"ادخل السعر",
+  "Is the service available only during daytime hours?":"هل تتوفر الخدمة خلال ساعات النهار فقط؟",
+  "The inspection fee is charged only if the service is not completed.":"يتم احتساب سعر المعاينة فقط في حال عدم إتمام الخدمة.",
+  "Price of inspection":"سعر المعاينة",
+  "Price per kilometer":"سعر كيلو المتر",
+  "Towing cost is low":"تكلفة سحب السيارة من مكان منخفض",
+  "Car unlocking price":"سعر فتح السيارة",
+  "You must verify that the customer owns the car before performing the service and upload proof of ownership after completion.":"يجب عليك التأكد من إمتلاك العميل للسيارة قبل تنفيذ الخدمة ورفع الاثبات بعد الانتهاء",
   
 
 

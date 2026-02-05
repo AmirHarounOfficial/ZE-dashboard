@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 "use client";
+=======
+'use client';
+>>>>>>> 119e90be90bbc86e31c548b40e433bae76769f5e
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
