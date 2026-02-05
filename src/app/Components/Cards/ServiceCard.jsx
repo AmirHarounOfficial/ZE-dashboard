@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IMAGE_BASE_URL } from '../../../../config/imageUrl';
-import ViewPage from '@/app/Pages/Services/Home_Car_Module/Service/View/_page';
+// import ViewPage from '@/app/Pages/Services/Home_Car_Module/Service/View/_page';
+import ViewPage from '../../Pages/Services/Home_Car_Module/Service/View/page'
 
 function ServiceCard({service}) {
   const { t } = useTranslation();

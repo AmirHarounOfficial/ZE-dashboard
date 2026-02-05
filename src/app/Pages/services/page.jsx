@@ -6,7 +6,7 @@ import StreetAssistant_Module from './StreetAssistant_Module/Service/page';
 
 
 function Servicespage() {
-  const current_module_key ='خدمات الطريق'
+  const current_module_key ='خدمات السيارات'
   let content;
 
   if (current_module_key === 'خدمات السيارات' || current_module_key === 'خدمات المنازل' ) {
