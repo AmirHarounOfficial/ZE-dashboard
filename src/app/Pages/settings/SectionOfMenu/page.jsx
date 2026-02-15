@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Company_dataPage from './Company_data/page'
 import Personal_dataPage from './Personal_data/page'
 import Marketer_PanelPage from './Marketer_Panel/page'
-import Activity_settingsPage from './Activity_settings/page'
 import BasicInformationPage from './Company_data/BasicInformation/page'
 import YourFilesPage from './Company_data/YourFiles/page'
 import ContactInformationPage from './Company_data/ContactInformation/page'
@@ -90,10 +89,7 @@ function SectionOfMenuPage({ selectedMenu }) {
         return (
           <Marketer_PanelPage userData={userData}/>
         )
-      case 'Activity_settings':
-        return (
-          <Activity_settingsPage />
-        )
+    
     
     }
   }

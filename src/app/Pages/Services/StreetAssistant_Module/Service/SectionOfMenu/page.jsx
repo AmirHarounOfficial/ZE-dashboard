@@ -10,27 +10,27 @@ function SectionOfMenuPage({selectedMenu}) {
 
   const renderContent =()=>{
     switch(selectedMenu){
-      case 'Battery operation':
+      case 40:
         return (
           <BatteryOperationPage/>
         )
-      case 'Wheel repair':
+      case 36:
         return (
           <WheelRepairPage/>
         )
-      case 'Car transport':
+      case 35:
         return(
           <CarTransportPage/>
         )
-      case 'Car unlock':
+      case 37:
         return(
           <CarUnlockPage/>
         )
-      case 'Fuel delivery':
+      case 39:
         return(
           <FuelDeliveryPage/>
         )
-      case 'General maintenance':
+      case 38:
         return(
           <GeneralMaintenancePage/>
         )

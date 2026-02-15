@@ -22,7 +22,7 @@ function SidebarMenuPage({ selectedMenu, setSelectedMenu }) {
     },
     {Label:'Personal_data', name:t('Personal data'), icon:'/images/icons/Personal_dataBlack.svg', iconSelected:'/images/icons/Personal_dataWhite.svg'},
     {Label:'Marketer_Panel', name:t('Marketer panel'), icon:'/images/icons/Marketer_PanelBlack.svg', iconSelected:'/images/icons/Marketer_PanelWhite.svg'},
-    {Label:'Activity_settings', name:t('Activity settings'), icon:'/images/icons/Activity_settingsBlack.svg', iconSelected:'/images/icons/Activity_settingsWhite.svg'},
+    // {Label:'Activity_settings', name:t('Activity settings'), icon:'/images/icons/Activity_settingsBlack.svg', iconSelected:'/images/icons/Activity_settingsWhite.svg'},
   ]
   
   const toggleDropdown = (label) => {

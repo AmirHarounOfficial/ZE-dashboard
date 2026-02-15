@@ -1,4 +1,4 @@
-import { AddService, getAllAreas, getAllServices, getCategories, getmodules, getServiceAnalysisById, getServiceById, updateService, deleteService } from "@/redux/api/Services/ServicesApi";
+import { AddService, getAllAreas, getAllServices, getCategories, getmodules, getServiceAnalysisById, getServiceById, updateService, deleteService, getStreetServiceById, getFuelPrices, getActiveFuelTypes, deleteFuelPrice, updateServiceSetting, updateServiceSettingStatus, streetAssistantStatus, createFuelPrice, updateFuelPrice } from "@/redux/api/Services/ServicesApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // get all services
@@ -122,6 +122,121 @@ export const deleteServiceThunk = createAsyncThunk(
   }
 );
 
+
+//street assistant
+/* ************************** */
+
+export const getStreetServiceByIdThunk = createAsyncThunk(
+  'sevices/getStreetServiceByIdThunk', 
+    async(_,{rejectWithValue })=>{
+      try{
+        const response = await getStreetServiceById()
+        console.log('getStreetServiceByIdThunk' , response);
+        return response
+      }catch(error){
+        return rejectWithValue(error.response?.data || error.message);
+      }
+  }
+)
+
+export const getFuelPricesThunk = createAsyncThunk(
+  'service/getFuelPricesThunk',
+  async(_ , {rejectWithValue})=>{
+    try{
+      const response = await getFuelPrices()
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+
+export const getActiveFuelTypesThunk = createAsyncThunk(
+  'service/getActiveFuelTypesThunk',
+  async(_ , {rejectWithValue})=>{
+    try{
+      const response = await getActiveFuelTypes()
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const deleteFuelPriceThunk = createAsyncThunk(
+  'services/deleteFuelPriceThunk' , 
+  async(id, {rejectWithValue})=>{
+    try{
+      const response = await deleteFuelPrice(id)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const updateServiceSettingThunk = createAsyncThunk(
+  'services/updateServiceSettingThunk',
+  async(formData, {rejectWithValue})=>{
+    try{
+      const response = await updateServiceSetting(formData)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const updateServiceSettingStatusThunk = createAsyncThunk(
+  'services/updateServiceSettingStatusThunk',
+  async(formData, {rejectWithValue})=>{
+    try{
+      const response = await updateServiceSettingStatus(formData)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const streetAssistantStatusThunk = createAsyncThunk(
+  'services/streetAssistantStatusThunk',
+  async(formData, {rejectWithValue})=>{
+    try{
+      const response = await streetAssistantStatus(formData)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const createFuelPriceThunk = createAsyncThunk(
+  'services/createFuelPriceThunk',
+  async(formData, {rejectWithValue})=>{
+    try{
+      const response = await createFuelPrice(formData)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
+export const updateFuelPriceThunk = createAsyncThunk(
+  'services/updateFuelPriceThunk',
+  async(formData, {rejectWithValue})=>{
+    try{
+      const response = await updateFuelPrice(formData)
+      return response
+    }catch(error){
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+)
+
 const initialState = {
     services: [],
     pagination: null,
@@ -136,6 +251,18 @@ const initialState = {
     loadingDetails: false,  
     errorList: null,
     errorDetails: null,
+
+    /** */
+    streetServices:[],
+    selectedService:null,
+    fuelPrice:[],
+    ActiveFuel:[],
+
+    serviceData:[],
+    statusData:[],
+    mainStatus:false,
+    FuelPriceData:[],
+    updateFuel:[]
   };
 
 const servicesSlice = createSlice({
@@ -144,6 +271,10 @@ const servicesSlice = createSlice({
   reducers: {
     clearService: (state) => {
       state.service = null; // optional clear on dialog close
+    },
+    selectServiceById: (state, action) => {
+      state.selectedService =
+        state.streetServices.find(s => s.id === action.payload) || null
     },
   },
   extraReducers: (builder) => {
@@ -271,13 +402,152 @@ const servicesSlice = createSlice({
         state.loadingDetails = false;
         // Optimization: remove from list immediately
         if (state.services) {
-           state.services = state.services.filter(s => s.id !== action.meta.arg);
+          state.services = state.services.filter(s => s.id !== action.meta.arg);
         }
       })
       .addCase(deleteServiceThunk.rejected, (state, action) => {
         state.loadingDetails = false;
         state.errorDetails = action.payload;
       })
+
+//street assistant
+/* ************************** */
+      //getStreetServiceByIdThunk
+      .addCase(getStreetServiceByIdThunk.pending, (state) => {
+        state.loadingList = true
+      })
+      .addCase(getStreetServiceByIdThunk.fulfilled, (state, action) => {
+        state.loadingList = false
+        state.streetServices = action.payload.services
+        state.mainStatus = action.payload.street_status
+        state.selectedService = action.payload.services[0] || null
+      })
+      .addCase(getStreetServiceByIdThunk.rejected, (state, action) => {
+        state.loadingList = false
+        state.errorList = action.payload
+      })
+
+      // getFuelPricesThunk
+      .addCase(getFuelPricesThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(getFuelPricesThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.fuelPrice = action.payload;
+      })
+      .addCase(getFuelPricesThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
+      //getActiveFuelTypesThunk
+      .addCase(getActiveFuelTypesThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(getActiveFuelTypesThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.ActiveFuel = action.payload;
+      })
+      .addCase(getActiveFuelTypesThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
+      // deleteFuelPriceThunk
+      .addCase(deleteFuelPriceThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(deleteFuelPriceThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        // Assuming action.meta.arg is the id passed to the thunk
+        if (Array.isArray(state.fuelPrice)) {
+          state.fuelPrice = state.fuelPrice.filter(item => item.id !== action.meta.arg);
+        } else {
+          state.fuelPrice = []; // fallback
+        }
+      })
+      .addCase(deleteFuelPriceThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
+      // updateServiceSettingThunk
+      .addCase(updateServiceSettingThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(updateServiceSettingThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.serviceData = action.payload;
+
+      })
+      .addCase(updateServiceSettingThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
+      //updateServiceSettingStatusThunk
+      .addCase(updateServiceSettingStatusThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(updateServiceSettingStatusThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.statusData = action.payload;
+
+      })
+      .addCase(updateServiceSettingStatusThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+      //streetAssistantStatusThunk
+      .addCase(streetAssistantStatusThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(streetAssistantStatusThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        if (action.payload.status !== undefined) {
+        state.mainStatus = action.payload.status;
+        }
+      })
+      .addCase(streetAssistantStatusThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+      //createFuelPriceThunk
+      .addCase(createFuelPriceThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(createFuelPriceThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.FuelPriceData = action.payload;
+
+      })
+      .addCase(createFuelPriceThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
+      //updateFuelPriceThunk
+      .addCase(updateFuelPriceThunk.pending, (state) => {
+        state.loadingList = true;
+        state.errorList = null;
+      })
+      .addCase(updateFuelPriceThunk.fulfilled, (state, action) => {
+        state.loadingList = false;
+        state.updateFuel = action.payload;
+
+      })
+      .addCase(updateFuelPriceThunk.rejected, (state, action) => {
+        state.loadingList = false;
+        state.errorList = action.payload;
+      })
+
 
 
 

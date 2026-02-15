@@ -95,7 +95,7 @@ const [openFinance, setOpenFinance] = useState(false);
               setOpen(!open);
             }
           }}
-        className="w-full flex justify-center mt-10 mb-14 cursor-pointer "
+        className="w-full flex justify-center mt-8 mb-8 cursor-pointer "
       >
         {open ?(
           <div className='flex gap-2 items-center'>
@@ -118,7 +118,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/Home/Services"  >
                 {open?(
                 //open 
-                  <div  className='flex gap-4 items-center py-4 px-2'>
+                  <div  className='flex gap-4 items-center py-3 px-2'>
                     <img src="/images/icons/dashboard.svg" alt="" className={pathname.startsWith("/Pages/dashboard") || pathname.startsWith("/Pages/Home") ? "invert" : ""}/>
                     <p className={`text-base font-normal ${pathname.startsWith("/Pages/dashboard") || pathname.startsWith("/Pages/Home") ? "text-[#fff]" : "text-[#364152]"}`}>{t('dashboard')}</p>
                   </div>
@@ -134,7 +134,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/requests" onClick={() => setIsSidebarOpen(false)}>
                 {open?(
                 //open 
-                  <div  className='flex gap-4 items-center py-4 px-2'>
+                  <div  className='flex gap-4 items-center py-3 px-2'>
                     <img src="/images/icons/Requests.svg" alt="" className={pathname.startsWith("/Pages/requests") ? "invert" : ""}/>
                     <p className={`text-base font-normal ${pathname.startsWith("/Pages/requests") ? "text-[#fff]" : "text-[#364152]"}`}>{t('Requests')}</p>
                   </div>
@@ -150,12 +150,12 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/workers" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/workers.svg" alt="" className={pathname.startsWith("/Pages/workers") ? "invert" : ""}/>
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/workers") ? "text-[#fff]" : "text-[#364152]"}`}>{t('workers')}</p>
                 </div>
               ):(
-                <div className='flex justify-center items-center py-4 px-2'>
+                <div className='flex justify-center items-center py-2 px-2'>
                   <img src="/images/icons/workers.svg" alt="" className={pathname.startsWith("/Pages/workers") ? "invert" : ""}/>
                 </div>
               )}
@@ -166,7 +166,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/Services" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/Services.svg" alt="" className={pathname.startsWith("/Pages/Services") ? "invert" : ""}/>
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/Services") ? "text-[#fff]" : "text-[#364152]"}`}>{t('Services')}</p>
                 </div>
@@ -182,7 +182,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/Subscription" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/Subscription.svg" alt="" className={pathname.startsWith("/Pages/Subscription") ? "invert" : ""}/>
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/Subscription") ? "text-[#fff]" : "text-[#364152]"}`}>
                     {t('Subscription')}
@@ -200,7 +200,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/conversations" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/conversations.svg" alt="" className={pathname.startsWith("/Pages/conversations") ? "invert" : ""}/>
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/conversations") ? "text-[#fff]" : "text-[#364152]"}`}>{t('conversations')}</p>
                 </div>
@@ -211,22 +211,6 @@ const [openFinance, setOpenFinance] = useState(false);
               )}
             </Link>
           </li>
-
-          {/* <li  className={`cursor-pointer  rounded ${pathname.startsWith("/Pages/finance") ? "bg-[#C69815] text-[#fff]" : ""}`}>
-            <Link href="/Pages/finance" onClick={() => setIsSidebarOpen(false)}>
-              {open?(
-              //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
-                  <img src="/images/icons/Finance.svg" alt="" className={pathname.startsWith("/Pages/finance") ? "invert" : ""}/>
-                  <p className={`text-base font-normal${pathname.startsWith("/Pages/finance") ? "text-[#fff]" : "text-[#364152]"}`}>{t('Finance')}</p>
-                </div>
-              ):(
-                <div className='flex justify-center items-center py-2 px-2'>
-                  <img src="/images/icons/Finance.svg" alt="" className={pathname.startsWith("/Pages/finance") ? "invert" : ""} />
-                </div>
-              )}
-            </Link>
-          </li> */}
 
           {/* Finance Dropdown */}
           <li className={` cursor-pointer rounded transition ${pathname.startsWith("/Pages/finance") ? "bg-[var(--color-primary)] text-white" : ""}`}>
@@ -313,7 +297,7 @@ const [openFinance, setOpenFinance] = useState(false);
             <Link href="/Pages/technicalSupport" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/dashboard.svg" alt="" className={pathname.startsWith("/Pages/technicalSupport")  ? "invert" : ""} />
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/technicalSupport") ? "text-[#fff]" : "text-[#364152]"}`}>{t('technical support')}</p>
                 </div>
@@ -325,13 +309,27 @@ const [openFinance, setOpenFinance] = useState(false);
             </Link>
           </li>
 
-
+          <li  className={`cursor-pointer  rounded  mt-auto mb-2 ${pathname.startsWith("/Pages/Activity_Settings") ? "bg-[#C69815] text-[#fff]" : ""}`}>
+          <Link href="/Pages/Activity_Settings" onClick={() => setIsSidebarOpen(false)}>
+              {open?(
+              //open 
+                <div className='flex gap-4 items-center py-3 px-2'>
+                  <img src="/images/icons/Activity_settings.svg" alt=""className={pathname.startsWith("/Pages/Activity_Settings") ? "invert" : ""} />
+                  <p className={`text-base font-normal ${pathname.startsWith("/Pages/Activity_Settings") ? "text-[#fff]" : "text-[#364152]"}`}>{t('Activity settings')}</p>
+                </div>
+              ):(
+                <div className='flex justify-center items-center py-2 px-2'>
+                  <img src="/images/icons/Activity_settings.svg" alt="" className={pathname.startsWith("/Pages/Activity_Settings") ? "invert" : ""}/>
+                </div>
+              )}
+          </Link>
+          </li>
       
           <li  className={`cursor-pointer  rounded  mt-auto mb-2 ${pathname.startsWith("/Pages/settings") ? "bg-[#C69815] text-[#fff]" : ""}`}>
           <Link href="/Pages/settings" onClick={() => setIsSidebarOpen(false)}>
               {open?(
               //open 
-                <div className='flex gap-4 items-center py-4 px-2'>
+                <div className='flex gap-4 items-center py-3 px-2'>
                   <img src="/images/icons/settings.svg" alt=""className={pathname.startsWith("/Pages/settings") ? "invert" : ""} />
                   <p className={`text-base font-normal ${pathname.startsWith("/Pages/settings") ? "text-[#fff]" : "text-[#364152]"}`}>{t('Settings')}</p>
                 </div>

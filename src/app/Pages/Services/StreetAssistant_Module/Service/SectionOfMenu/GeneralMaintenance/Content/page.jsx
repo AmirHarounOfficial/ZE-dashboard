@@ -1,11 +1,101 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
 import Switch from '@mui/material/Switch'
 import { styled } from '@mui/material/styles'
+import { getStreetServiceByIdThunk, updateServiceSettingThunk, updateServiceSettingStatusThunk, streetAssistantStatusThunk } from '@/redux/slice/Services/ServicesSlice'
 
 function ContentPage() {
   const {t} = useTranslation()
+  
+  /**api */
+  const dispatch = useDispatch()
+  const { streetServices, loadingList, mainStatus: reduxMainStatus } = useSelector((state) => state.services)
+  const batteryReviveService = streetServices?.find(service => service.id === 40)
+
+  const [mainStatus, setMainStatus] = useState(false)
+  const [serviceStatus, setServiceStatus] = useState(false)
+  const [price, setPrice] = useState('')
+  const [isDayOnly, setIsDayOnly] = useState(0)
+
+  useEffect(() => {
+    dispatch(getStreetServiceByIdThunk())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (batteryReviveService?.settings) {
+      setServiceStatus(batteryReviveService.settings.status === 1)
+      setPrice(batteryReviveService.settings.price || '')
+      setIsDayOnly(batteryReviveService.settings.is_day_only)
+    }
+  }, [batteryReviveService])
+
+  useEffect(() => {
+    if (reduxMainStatus !== null && reduxMainStatus !== undefined) {
+      setMainStatus(reduxMainStatus === 1)
+    }
+  }, [reduxMainStatus])
+
+  const handleSave = () => {
+    if (!batteryReviveService?.settings?.id) return;
+
+    const data = {
+      service_setting_id: batteryReviveService.settings.id,
+      price: price,
+      is_day_only: isDayOnly,
+    }
+
+    dispatch(updateServiceSettingThunk(data))
+      .unwrap()
+      .then(() => {
+        dispatch(getStreetServiceByIdThunk()) // Refresh data after update
+      })
+      .catch((error) => {
+        console.error("Failed to update settings:", error)
+      })
+  }
+
+  const handleStatusChange = (e) => {
+    const newStatus = e.target.checked;
+    setServiceStatus(newStatus); // Update UI immediately
+
+    if (!batteryReviveService?.settings?.id) return;
+
+    const data = {
+      service_setting_id: batteryReviveService.settings.id,
+      status: newStatus ? 1 : 0
+    }
+
+    dispatch(updateServiceSettingStatusThunk(data))
+      .unwrap()
+      .then(() => {
+        dispatch(getStreetServiceByIdThunk()) // Refresh data to stay in sync
+      })
+      .catch((error) => {
+        console.error("Failed to update status:", error)
+        setServiceStatus(!newStatus); // Revert UI on failure
+      })
+  }
+
+  const handleMainStatusChange = (e) => {
+    const newStatus = e.target.checked;
+    setMainStatus(newStatus); // Update UI immediately
+
+    const formData = new FormData();
+    formData.append('street_assistant_status', newStatus ? 1 : 0);
+
+    dispatch(streetAssistantStatusThunk(formData))
+      .unwrap()
+      .then(() => {
+        console.log("Street assistant status updated successfully")
+      })
+      .catch((error) => {
+        console.error("Failed to update main status:", error)
+        setMainStatus(!newStatus); // Revert UI on failure
+      })
+  }
+
 
   const GreenSwitch = styled((props) => (
     <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -53,14 +143,26 @@ function ContentPage() {
   }));
   
 
+  if (loadingList) {
+    return (
+      <div className='p-6 flex items-center justify-center'>
+        <p className='text-[#4B5565]'>{t('Loading...')}</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className=' p-6'>
+        <p className='hidden'>{batteryReviveService?.settings?.id}</p>
         <div className='border border-[#CDD5DF] p-6'>
 
           <div className='flex justify-between items-center px-6 py-4 mb-8 border border-[#CDD5DF] rounded-[3px]'>
             <p className='text-[#4B5565] text-base font-normal '>{t('Activation of all services')}</p>
-            <GreenSwitch   />
+            <GreenSwitch 
+              checked={mainStatus}
+              onChange={handleMainStatusChange}
+            />
           </div>
 
           <div className='flex gap-3 w-full mb-6'>
@@ -75,7 +177,9 @@ function ContentPage() {
               </div>
 
               <div className='py-2.5'>
-                <p className='text-[#202939] text-lg font-medium'>22</p>
+                <p className='text-[#202939] text-lg font-medium'>
+                  {batteryReviveService?.bookings_sum || 0}
+                </p>
               </div>
 
             </section>
@@ -92,9 +196,8 @@ function ContentPage() {
 
               <div className='py-2.5'>
                 <p className='text-[#202939] text-lg font-medium'>
-                  <span>11</span>
-                  <span>{t('Requests')}</span>
-                
+                  <span>{batteryReviveService?.bookings_count || 0}</span>
+                  <span> {t('Requests')}</span>
                 </p>
               </div>
 
@@ -106,7 +209,10 @@ function ContentPage() {
 
             <div className='flex gap-4 mb-6'>
               <p className='text-[#4B5565] text-base font-normal '>{t('Activate the service')}</p>
-              <GreenSwitch   />
+              <GreenSwitch 
+                checked={serviceStatus}
+                onChange={handleStatusChange}
+              />
             </div>
             
             <div className='flex flex-col gap-1.5 mb-4'>
@@ -114,26 +220,32 @@ function ContentPage() {
               <input 
                 type="text"
                 placeholder={t('Enter the price')}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 className='border border-[#C8C8C8] w-full h-14 px-3 outline-none'
-                />
+              />
             </div>
 
             <div>
               <p className='text-[#4B5565] text-sm font-normal mb-3'>{t('Is the service available only during daytime hours?')}</p>
-              {["نعم", "لا"].map((item, index) => (
+              {[
+                { label: t('yes'), value: 1 },
+                { label: t('no'), value: 0 }
+              ].map((item, index) => (
                 <label key={index} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="day_service"
                     className="peer hidden"
-                    defaultChecked={item === "نعم"}
+                    checked={isDayOnly === item.value}
+                    onChange={() => setIsDayOnly(item.value)}
                   />
 
                   <span className="w-5 h-5 mb-2 rounded-full border border-gray-400 flex items-center justify-center peer-checked:bg-[var(--color-primary)] peer-checked:border-0">
                     <img src="/images/icons/checkWhite.svg" alt="" />
                   </span>
 
-                  <span className='mb-2 text-[#697586] text-sm font-normal'>{item}</span>
+                  <span className='mb-2 text-[#697586] text-sm font-normal'>{item.label}</span>
                 </label>
               ))}
 
@@ -142,7 +254,10 @@ function ContentPage() {
           </div>
 
           {/* btn */}
-          <button className='bg-[var(--color-primary)] text-white text-base font-medium h-15 w-[50%] rounded-[3px] my-6 cursor-pointer'>
+          <button 
+            onClick={handleSave}
+            className='bg-[var(--color-primary)] text-white text-base font-medium h-15 w-[50%] rounded-[3px] my-6 cursor-pointer'
+          >
             {t('It was completed')}
           </button>
 

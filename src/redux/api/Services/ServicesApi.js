@@ -62,3 +62,56 @@ export const deleteService = async (service_id) => {
   const response = await API.delete(`/provider/services/${service_id}`);
   return response.data;
 };
+
+
+
+
+//street assistant
+/* ************************** */
+
+export const getStreetServiceById =async()=>{
+  const response = await API.get('/street_assistant/services')
+  return response.data
+}
+
+export const getFuelPrices = async()=>{
+  const response = await API.get('/street_assistant/getFuelPrices')
+  return response.data
+}
+
+export const getActiveFuelTypes = async()=>{
+  const response = await API.get('/street_assistant/getActiveFuelTypes')
+  return response.data
+}
+
+export const deleteFuelPrice = async(id)=>{
+  const response = await API.post('/street_assistant/deleteFuelPrice',{id})
+  return response.data;
+}
+
+export const updateServiceSetting = async(formData)=>{
+  const response = await API.post('/street-assistant/update-service-setting', formData)
+  return response.data
+}
+
+export const updateServiceSettingStatus = async(formData)=>{
+  const response = await API.post('/street-assistant/update-service-setting-status',formData)
+  return response.data
+}
+
+export const streetAssistantStatus = async(formData)=>{
+  const response = await API.post('/provider/street-assistant-status', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  return response.data
+}
+
+export const createFuelPrice = async(formData)=>{
+  const response = await API.post('/street_assistant/createFuelPrice',formData)
+  return response.data
+}
+
+export const updateFuelPrice = async(formData)=>{
+  const response = await API.post('/street_assistant/updateFuelPrice',formData)
+  return response.data  
+}

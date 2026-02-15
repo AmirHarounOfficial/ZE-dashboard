@@ -1,4 +1,4 @@
-import { AddIpn, CardMarketer, changeEmail, changePhone, deleteWithdrawsMarketer, getProfile, setNewPassword, updateProfileImage, verifyEmailOtp, verifyPhoneOtp, withdrawsMarketer } from "@/redux/api/Setting/SettingApi";
+import { AddIpn, CardMarketer, changeEmail, changePhone, deleteWithdrawsMarketer, deletePolicy, getPolicies, getProfile, setNewPassword, updateProfileImage, verifyEmailOtp, verifyPhoneOtp, withdrawsMarketer } from "@/redux/api/Setting/SettingApi";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const changeEmailThunk = createAsyncThunk('setting/changeEmail' , 
@@ -133,6 +133,30 @@ export const updateProfileImageThunk = createAsyncThunk('setting/updateProfileIm
   }
 )
 
+/***************************************************** */
+//******Activity_Settings
+export const getPoliciesThunk = createAsyncThunk('setting/getPoliciesThunk' , 
+  async(_ , {rejectWithValue})=>{
+    try{
+      const response = await getPolicies()
+      return response.data
+    }catch(error){
+      return rejectWithValue(error.response?.data || "Failed to get policies  image");
+    }
+  }
+)
+
+export const deletePolicyThunk = createAsyncThunk('setting/deletePolicyThunk',
+  async(policyId , {rejectWithValue})=>{
+    try{
+      await deletePolicy(policyId)
+      return policyId
+    }catch(error){
+      return rejectWithValue(error.response?.data || "Failed to delete policy");
+    }
+  }
+)
+
 const initialState ={
   success:false,
   loading: false,
@@ -156,6 +180,7 @@ const initialState ={
 
   ipnData: null,
   
+  policies:[]
 }
 const settingSlice = createSlice({
   name:'setting' ,
@@ -335,6 +360,35 @@ const settingSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.success = false;
+      })
+/***************************************************************** */
+      //getPoliciesThunk
+      .addCase(getPoliciesThunk.pending , (state)=>{
+        state.loading = true ;
+        state.error = null;
+      })
+      .addCase(getPoliciesThunk.fulfilled , (state , action)=>{
+        state.loading = false;
+        state.policies = action.payload;
+      })
+      .addCase(getPoliciesThunk.rejected , (state , action)=>{
+        state.loading = false;
+        state.error = action.payload;
+      })
+      //deletePolicyThunk
+      .addCase(deletePolicyThunk.pending , (state)=>{
+        state.loading = true ;
+        state.error = null;
+      })
+      .addCase(deletePolicyThunk.fulfilled , (state , action)=>{
+        state.loading = false;
+        state.policies = state.policies.filter(
+          (policy) => policy.id !== action.payload
+        );
+      })
+      .addCase(deletePolicyThunk.rejected , (state , action)=>{
+        state.loading = false;
+        state.error = action.payload;
       })
 }
 })

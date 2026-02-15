@@ -6,7 +6,7 @@ import SidebarMenuPage from './SidebarMenu/page'
 import SectionOfMenuPage from './SectionOfMenu/page'
 
 function ServicePage() {
-    const [selectedMenu, setSelectedMenu] = useState('Battery operation')
+    const [selectedMenu, setSelectedMenu] = useState(40)
   return (
     <MainLayout>   
       <>
@@ -18,8 +18,8 @@ function ServicePage() {
           </div>
 
           <div className='w-[70%]'>
-          <SectionOfMenuPage selectedMenu={selectedMenu}/>
-        </div>
+            <SectionOfMenuPage selectedMenu={selectedMenu}/>
+          </div>
         </div>
       </>
     </MainLayout>
