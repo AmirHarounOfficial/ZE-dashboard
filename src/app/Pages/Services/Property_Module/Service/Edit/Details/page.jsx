@@ -1,12 +1,12 @@
 "use client"
 import { getAllDetailsThunk } from '@/redux/slice/Services/ServicesSlice'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { IMAGE_BASE_URL } from '../../../../../../../../config/imageUrl'
 
-function DetailsPage() {
+function DetailsPageContent() {
   const {t} = useTranslation()
 
 
@@ -102,4 +102,10 @@ function DetailsPage() {
   )
 }
 
-export default DetailsPage
+export default function DetailsPage() {
+  return (
+    <Suspense fallback={null}>
+      <DetailsPageContent />
+    </Suspense>
+  )
+}
