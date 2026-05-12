@@ -1,9 +1,9 @@
 "use client"
 import React, { Suspense, use, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
-import InformationPage from './Information/page';
-import Arrival_DeparturePage from './Arrival_Departure/page';
-import Receive_GuestsPage from './Receive_Guests/page';
+import InformationPage from './Information/InformationComponent';
+import Arrival_DeparturePage from './Arrival_Departure/ArrivalDepartureComponent';
+import Receive_GuestsPage from './Receive_Guests/ReceiveGuestsComponent';
 import MainLayout from '@/app/Components/MainLayout/MainLayout';
 import TitleOfHeader from '../../TitleOfHeader';
 import { useRouter, useSearchParams } from 'next/navigation';

@@ -1,9 +1,9 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
-import InformationPage from './Information/page';
-import Arrival_DeparturePage from './Arrival_Departure/page';
-import Receive_GuestsPage from './Receive_Guests/page';
+import InformationPage from './Information/InformationComponent';
+import Arrival_DeparturePage from './Arrival_Departure/ArrivalDepartureComponent';
+import Receive_GuestsPage from './Receive_Guests/ReceiveGuestsComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { addPropertyDetailsThunk } from '@/redux/slice/Services/ServicesSlice';
 

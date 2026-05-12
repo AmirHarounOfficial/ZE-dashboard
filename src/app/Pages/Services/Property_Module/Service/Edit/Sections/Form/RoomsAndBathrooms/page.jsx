@@ -1,8 +1,8 @@
 "use client"
 import React, { Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
-import RoomPage from './Room/page';
-import BathroomPage from './Bathroom/page';
+import RoomPage from './Room/RoomComponent';
+import BathroomPage from './Bathroom/BathroomComponent';
 import MainLayout from '@/app/Components/MainLayout/MainLayout';
 import TitleOfHeader from '../../TitleOfHeader';
 import { useRouter, useSearchParams } from 'next/navigation';

@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next';
-import RoomPage from './Room/page';
-import BathroomPage from './Bathroom/page';
+import RoomPage from './Room/RoomComponent';
+import BathroomPage from './Bathroom/BathroomComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUnitsThunk } from '@/redux/slice/Services/ServicesSlice';
 

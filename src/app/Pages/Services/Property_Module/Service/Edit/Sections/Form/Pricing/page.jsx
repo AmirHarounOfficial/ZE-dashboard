@@ -1,9 +1,9 @@
 "use client"
 import React, { Suspense, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
-import PricingInfoPage from './PricingInfo/page';
-import CancellationPolicyPage from './CancellationPolicy/page';
-import PricingDetailsPage from './PricingDetails/page';
+import PricingInfoPage from './PricingInfo/PricingInfoComponent';
+import CancellationPolicyPage from './CancellationPolicy/CancellationPolicyComponent';
+import PricingDetailsPage from './PricingDetails/PricingDetailsComponent';
 import MainLayout from '@/app/Components/MainLayout/MainLayout';
 import TitleOfHeader from '../../TitleOfHeader';
 import { useRouter, useSearchParams } from 'next/navigation';
