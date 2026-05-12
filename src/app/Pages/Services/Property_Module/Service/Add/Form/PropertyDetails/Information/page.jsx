@@ -122,7 +122,7 @@ function InformationPage({setFormData ,formData}) {
                 type="number"
                 min="0" 
                 disabled={isGroundFloor}
-                value={formData.floor_number === 0 && isGroundFloor ? "" : formData.floor_number}
+                value={formData?.floor_number === 0 && isGroundFloor ? "" : formData?.floor_number}
                 onChange={(e) => setFormData({ ...formData, floor_number: e.target.value })}
                 placeholder={t('Floor number')}
                 className="w-full  px-3 py-2 h-14 p-3 border border-[#CDD5DF] text-sm text-[#7d8d84] rounded-[3px] outline-none disabled:bg-[#f1f5f9] disabled:cursor-not-allowed"
