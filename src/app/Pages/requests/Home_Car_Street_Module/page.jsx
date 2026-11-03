@@ -67,7 +67,15 @@ function RequestsPage() {
         className="w-full"
       >
         {bookings?.bookings?.data?.length === 0 ?(
-          <No_Requests/>
+          <>
+            <NavRequest 
+                onApplyFilters={handleApplyFilters} 
+                onResetFilters={handleResetFilters} 
+                onSearch={setSearchTerm}
+              />
+            <No_Requests/>
+          </>
+          
         ):(
           <>
             <NavRequest 
