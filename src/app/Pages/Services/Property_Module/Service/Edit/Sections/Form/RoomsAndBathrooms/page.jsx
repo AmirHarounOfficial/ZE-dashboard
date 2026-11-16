@@ -237,7 +237,7 @@ function RoomsAndBathroomsPageContent() {
         // Clear pending deletions after successful save
         setPendingDeleteRoomIds([]);
         setPendingDeleteBathroomIds([]);
-        router.push(`/Pages/Services/Property_Module/Service/Edit?id=${formData.property_id}`)
+        router.push(`/Pages/Services/Property_Module/Service/Edit?id=${id}`)
       }
     } catch (error) {
       console.log(error)

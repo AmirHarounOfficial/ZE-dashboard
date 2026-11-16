@@ -151,7 +151,7 @@ function AddressPageContent() {
           if (from === 'Add') {
             router.push(`/Pages/Services/Property_Module/Service/Add/FormData?property_id=${id}`)
           } else {
-            router.push(`/Pages/Services/Property_Module/Service/Edit?id=${formData.property_id}`)
+            router.push(`/Pages/Services/Property_Module/Service/Edit?id=${id}`)
           }
         }
         

@@ -92,7 +92,7 @@ function AvailabilityPageContent() {
         })
       ).unwrap();
 
-      router.push(`/Pages/Services/Property_Module/Service/Edit?id=${formData.property_id}`);
+      router.push(`/Pages/Services/Property_Module/Service/Edit?id=${id || formData.property_id}`);
     } catch (error) {
       console.error('Submit error:', error);
     }
