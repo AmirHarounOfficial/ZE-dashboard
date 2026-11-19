@@ -45,13 +45,23 @@ function FleetPage() {
         />
       </div>
 
-      <button
-        onClick={()=>setOpen(true)}  
-        className={`flex gap-2 justify-center items-center  bg-primary w-[30%] h-14 rounded-3px px-3 my-4 cursor-pointer`}
-      >
-        <span className="text-white text-base font-medium">{t('Adding a driver to the fleet')}</span>
-        <img src="/images/icons/AddIcon.svg" alt="" className="w-6 h-6" />
-      </button>
+      <div className='flex justify-between items-center mt-6'>
+        <button
+          onClick={()=>router.back()}
+          className={`flex gap-2 justify-center items-center  bg-primary w-[15%] h-14 rounded-3px px-3 my-4 cursor-pointer`}
+        >
+          <span className="text-white text-base font-medium">{t('Return')}</span>
+        </button>
+
+        <button
+          onClick={()=>setOpen(true)}  
+          className={`flex gap-2 justify-center items-center  bg-primary w-[20%] h-14 rounded-3px px-3 my-4 cursor-pointer`}
+        >
+          <span className="text-white text-base font-medium">{t('Adding a driver to the fleet')}</span>
+          <img src="/images/icons/AddIcon.svg" alt="" className="w-6 h-6" />
+        </button>
+      </div>
+      
 
       <AddPage
         open={open}
