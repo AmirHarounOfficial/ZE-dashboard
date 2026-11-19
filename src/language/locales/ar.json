@@ -1896,6 +1896,9 @@
   "Policy deleted successfully":"تم حذف السياسة بنجاح",
   "Failed to delete policy":"فشل في حذف السياسة",
   "Deleting...":"جارٍ الحذف...",
+  "Not disabled":"غير معطل",
+  "Driver updated successfully":"تم تحديث السائق بنجاح",
+  "Failed to update driver":"فشل في تحديث السائق",
 
 
   "":""

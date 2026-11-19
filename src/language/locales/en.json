@@ -1897,6 +1897,11 @@
   "Policy deleted successfully":"Policy deleted successfully",
   "Failed to delete policy":"Failed to delete policy",
   "Deleting...":"Deleting...",
+  "Not disabled":"Not disabled",
+  "Driver updated successfully":"Driver updated successfully",
+  "Failed to update driver":"Failed to update driver",
+  
+
 
 
 
