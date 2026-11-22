@@ -139,13 +139,41 @@ function formatDateDivider(dateKey, t) {
   }
 }
 
+function formatMessageTimeOnly(message) {
+  if (!message) return "";
+
+  if (message.created_at) {
+    try {
+      const d = new Date(message.created_at);
+      if (!isNaN(d.getTime())) {
+        const hours = d.getHours();
+        const minutes = d.getMinutes().toString().padStart(2, "0");
+        const period = hours >= 12 ? "م" : "ص";
+        const formattedHours = (hours % 12 || 12).toString();
+        return `${formattedHours}:${minutes} ${period}`;
+      }
+    } catch {}
+  }
+
+  if (message.time && typeof message.time === "string") {
+    const trimmed = message.time.trim();
+    const parts = trimmed.split(/\s{2,}|\s+(?=\d{4}[/-])/);
+    if (parts.length > 0 && parts[0]) {
+      return parts[0].trim();
+    }
+    return trimmed;
+  }
+
+  return "";
+}
+
 const defaultMessages = [
   {
     id: 1,
     isMe: true,
     sender_type: "provider",
     message: "مرحبا هل ممكن مساعدة",
-    time: "١١:٠٢ ص  2025/11/5",
+    time: "١١:٠٢ ص",
     created_at: "2025-11-05T11:02:00Z",
     is_read: true,
   },
@@ -154,7 +182,7 @@ const defaultMessages = [
     isMe: false,
     sender_type: "user",
     message: "نعم تفضل",
-    time: "١١:٠٢ ص  2025/11/5",
+    time: "١١:٠٢ ص",
     created_at: "2025-11-05T11:02:00Z",
     is_read: true,
   },
@@ -163,7 +191,7 @@ const defaultMessages = [
     isMe: true,
     sender_type: "provider",
     message: "أود استفسارًا عن بعض الأدوية المتاحة؟ شكرًا لك!",
-    time: "١١:٠٢ ص  2025/11/6",
+    time: "١١:٠٢ ص",
     created_at: "2025-11-06T11:02:00Z",
     is_read: true,
   },
@@ -172,7 +200,7 @@ const defaultMessages = [
     isMe: false,
     sender_type: "user",
     message: "ممكن تسجل صوت نفهم المشكلة اكثر",
-    time: "١١:٠٢ ص  2025/11/6",
+    time: "١١:٠٢ ص",
     created_at: "2025-11-06T11:02:00Z",
     is_read: true,
   },
@@ -643,7 +671,7 @@ export default function ChatWindowPage({ selectedUser }) {
                         )}
 
                         <div className="flex items-center justify-end gap-1 text-[#667781] text-[11px] mt-1 select-none">
-                          <span dir="auto">{message.time}</span>
+                          <span dir="auto">{formatMessageTimeOnly(message)}</span>
                           <DoubleCheckIcon
                             className={`size-3.5 shrink-0 ${
                               message.is_read ? "text-[#079455]" : "text-[#9aa4b2]"
@@ -723,7 +751,7 @@ export default function ChatWindowPage({ selectedUser }) {
                         )}
 
                         <div className="flex items-center justify-end text-[#667781] text-[11px] mt-1 select-none">
-                          <span dir="auto">{message.time}</span>
+                          <span dir="auto">{formatMessageTimeOnly(message)}</span>
                         </div>
 
                         {/* WhatsApp bottom arrow on the LEFT */}
