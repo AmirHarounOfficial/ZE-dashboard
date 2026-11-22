@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
 import { getEchoInstance } from "@/lib/echo";
 import {
   getAuthToken,
@@ -124,19 +125,50 @@ export default function ChatWindowPage({ selectedUser }) {
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [isOtherTyping, setIsOtherTyping] = useState(false);
 
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const fileInputRef = useRef(null);
   const lastTypingSentRef = useRef(0);
   const idleTypingTimerRef = useRef(null);
   const otherTypingTimerRef = useRef(null);
 
-  const scrollToBottom = (behavior = "smooth") => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
+  const [showScrollBottomBtn, setShowScrollBottomBtn] = useState(false);
+  const userScrolledUpRef = useRef(false);
+  const isInitialLoadRef = useRef(true);
+
+  // Manual scroll to bottom
+  const scrollToBottom = useCallback((behavior = "smooth") => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior,
+      });
+    }
+  }, []);
+
+  const handleScroll = () => {
+    if (!messagesContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight <= 80;
+    userScrolledUpRef.current = !isAtBottom;
+    setShowScrollBottomBtn(!isAtBottom);
   };
 
+  // Reset scroll state on conversation switch
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isOtherTyping]);
+    userScrolledUpRef.current = false;
+    setShowScrollBottomBtn(false);
+    isInitialLoadRef.current = true;
+  }, [conversationId]);
+
+  // Initial scroll to bottom on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Load chat messages when conversation changes
   const loadMessages = useCallback(async () => {
@@ -156,13 +188,37 @@ export default function ChatWindowPage({ selectedUser }) {
       setMessages(defaultMessages);
     } finally {
       setLoadingHistory(false);
-      setTimeout(() => scrollToBottom("auto"), 50);
+      // If user hasn't scrolled up, scroll to bottom
+      if (!userScrolledUpRef.current) {
+        setTimeout(() => {
+          if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+          }
+        }, 50);
+      }
     }
   }, [conversationId]);
 
   useEffect(() => {
     loadMessages();
   }, [loadMessages]);
+
+  // Keep chat at bottom when new messages arrive UNLESS the user scrolled up
+  useEffect(() => {
+    if (userScrolledUpRef.current) return;
+
+    if (messagesContainerRef.current) {
+      if (isInitialLoadRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        isInitialLoadRef.current = false;
+      } else {
+        messagesContainerRef.current.scrollTo({
+          top: messagesContainerRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [messages]);
 
   // Laravel Echo / Reverb WebSocket Connection
   useEffect(() => {
@@ -338,6 +394,11 @@ export default function ChatWindowPage({ selectedUser }) {
     setMessages((prev) => [...prev, optimisticMsg]);
     setSending(true);
 
+    // Ensure view scrolls to the newly sent message
+    userScrolledUpRef.current = false;
+    setShowScrollBottomBtn(false);
+    setTimeout(() => scrollToBottom("smooth"), 40);
+
     try {
       const savedMsg = await sendMessage({
         conversationId,
@@ -374,7 +435,7 @@ export default function ChatWindowPage({ selectedUser }) {
 
   if (!selectedUser) {
     return (
-      <div className="flex h-full items-center justify-center rounded-xl bg-white border border-[#d1d1d1]">
+      <div className="flex h-full items-center justify-center rounded-3px bg-white border border-[#d1d1d1]">
         <p className="text-gray-500">
           {t("Select a person to start chatting") || "اختر محادثة لبدء المراسلة"}
         </p>
@@ -383,9 +444,9 @@ export default function ChatWindowPage({ selectedUser }) {
   }
 
   return (
-    <div className="flex flex-col rounded-3px bg-white border border-[#d1d1d1] h-screen max-h-screen overflow-hidden">
+    <div className="flex flex-col rounded-3px bg-white border border-[#d1d1d1] h-full overflow-hidden relative">
       {/* Header */}
-      <div className="border-b border-[#d1d1d1] p-4 shrink-0 bg-white">
+      <div className="border-b  border-[#d1d1d1] p-4 shrink-0 bg-white">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500 text-white text-base overflow-hidden shrink-0">
             {selectedUser.avatar ? (
@@ -411,7 +472,11 @@ export default function ChatWindowPage({ selectedUser }) {
       </div>
 
       {/* Messages List */}
-      <div className="flex-1 min-h-0 p-4 overflow-y-auto flex flex-col gap-[16px]">
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 min-h-0 p-4 overflow-y-auto flex flex-col gap-[16px] relative"
+      >
         {loadingHistory && messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-400 text-sm">
             {t("Loading messages...") || "جاري تحميل الرسائل..."}
@@ -487,8 +552,8 @@ export default function ChatWindowPage({ selectedUser }) {
                 </div>
               </div>
             ) : (
-              /* Receiver (User / Customer) - Left Aligned with lavender bubble */
-              <div key={message.id} className="flex flex-col items-start w-full">
+              /* Receiver##### (User / Customer) - Left Aligned with lavender bubble */
+              <div key={message.id} className="flex flex-col bg-green-400  items-start w-full">
                 <div className="flex gap-2 items-start justify-start max-w-[85%]">
                   <UserAvatar avatar={`${IMAGE_BASE_URL}${selectedUser?.avatar}`} name={selectedUser?.name} />
                   <div className="bg-[#ede7fd] shadow-[4px_4px_10px_rgba(0,0,77,0.04)] flex flex-col gap-2 items-start justify-center pt-[16px] pb-[8px] pl-[16px] pr-[24px] rounded-[3px]">
@@ -562,8 +627,6 @@ export default function ChatWindowPage({ selectedUser }) {
             </div>
           </div>
         )}
-
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Selected file preview pill */}
@@ -630,7 +693,32 @@ export default function ChatWindowPage({ selectedUser }) {
           </button>
         </div>
       </form>
-      
+
+      {/* Floating scroll to bottom button when user scrolls up */}
+      <AnimatePresence>
+        {showScrollBottomBtn && (
+          <motion.button
+            type="button"
+            initial={{ opacity: 0, scale: 0.7, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.7, y: 12 }}
+            transition={{ duration: 0.2 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={() => {
+              userScrolledUpRef.current = false;
+              setShowScrollBottomBtn(false);
+              scrollToBottom("smooth");
+            }}
+            className="absolute bottom-24 end-6 z-30 w-11 h-11 rounded-full bg-white shadow-[0_4px_16px_rgba(0,0,0,0.18)] border border-[#E3E8EF] flex items-center justify-center text-primary cursor-pointer hover:bg-[#FFFDF5] hover:border-primary/40 transition-colors"
+            title={t("Scroll to bottom") || "الانتقال لآخر الرسائل"}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 13l-7 7m0 0l-7-7m7 7V4" />
+            </svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

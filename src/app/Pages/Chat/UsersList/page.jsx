@@ -217,8 +217,8 @@ export default function UsersListPage({
   });
 
   return (
-    <div className="rounded-3px bg-white py-6 border border-[#d1d1d1] h-screen flex flex-col">
-      <h2 className="text-[#28292A] text-xl px-4 font-normal mb-6">
+    <div className="rounded-3px bg-white py-6 border border-[#d1d1d1] h-full flex flex-col overflow-hidden">
+      <h2 className="text-[#28292A] text-xl  px-4 font-normal mb-6">
         {t("All conversations") || "جميع المحادثات"}
       </h2>
 
@@ -263,7 +263,7 @@ export default function UsersListPage({
       </div>
 
       {/* User / Conversation List */}
-      <div className="flex-1 overflow-y-auto flex flex-col gap-2 px-2">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-2 px-2 min-h-0">
         {filteredUsers.length === 0 ? (
           <div className="p-4 text-center text-gray-400 text-sm">
             {t("No conversations found") || "لا توجد محادثات"}
