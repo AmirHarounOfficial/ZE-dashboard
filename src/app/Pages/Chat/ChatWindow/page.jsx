@@ -56,6 +56,30 @@ function UserAvatar({ avatar, name }) {
   );
 }
 
+function WhatsAppTail({ isRight, color = "#ffffff" }) {
+  if (isRight) {
+    return (
+      <svg
+        className="absolute -bottom-[0.5px] -right-[8px] w-[9px] h-[13px] pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
+        viewBox="0 0 9 13"
+        fill="none"
+      >
+        <path d="M0 0 C1.5 3.5 5 8.5 9 13 L0 13 Z" fill={color} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      className="absolute -bottom-[0.5px] -left-[8px] w-[9px] h-[13px] pointer-events-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.04)]"
+      viewBox="0 0 9 13"
+      fill="none"
+    >
+      <path d="M9 0 C7.5 3.5 4 8.5 0 13 L9 13 Z" fill={color} />
+    </svg>
+  );
+}
+
 const defaultMessages = [
   {
     id: 1,
@@ -92,7 +116,12 @@ const defaultMessages = [
 ];
 
 export default function ChatWindowPage({ selectedUser }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRtl =
+    i18n?.language === "ar" ||
+    (typeof document !== "undefined" &&
+      (document.dir === "rtl" || document.documentElement.dir === "rtl")) ||
+    false;
   const conversationId = selectedUser?.id || selectedUser?.conversation_id;
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -475,7 +504,7 @@ export default function ChatWindowPage({ selectedUser }) {
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 min-h-0 p-4 overflow-y-auto flex flex-col gap-[16px] relative"
+        className="flex-1 min-h-0 p-4 overflow-y-auto flex flex-col gap-[16px] relative bg-[#FFFDF5]"
       >
         {loadingHistory && messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-400 text-sm">
@@ -486,25 +515,27 @@ export default function ChatWindowPage({ selectedUser }) {
             const isMe = Boolean(message.isMe);
 
             return isMe ? (
-              /* Sender (Me / Provider) - Right Aligned with white bubble & double green checkmarks */
-              <div key={message.id} className="flex flex-col items-end w-full">
-                <div className="flex gap-2 items-start justify-end max-w-[85%]">
-                  <div className="bg-white shadow-[0px_0px_10px_rgba(74,87,84,0.1)] flex flex-col gap-2 items-end justify-center pt-[16px] pb-[8px] pl-[24px] pr-[16px] rounded-[3px]">
+              /* Sender (Me / Provider) - Fixed to RIGHT side */
+              <div key={message.id} className="flex w-full justify-end" dir="ltr">
+                <div className="flex gap-2.5 items-end max-w-[85%]">
+                  <div
+                    className="relative bg-white shadow-[0_1px_2px_rgba(0,0,0,0.08)] border border-black/[0.04] flex flex-col pt-2.5 pb-2 px-3.5 min-w-[95px] rounded-2xl rounded-br-[2px]"
+                  >
                     {/* Attachment preview if exists */}
                     {message.attachment && (
-                      <div className="w-full mb-1">
+                      <div className="w-full mb-1.5 rounded-xl overflow-hidden">
                         {message.attachment.match(/\.(jpeg|jpg|png|gif|webp)$/i) ||
                         message.attachment.startsWith("blob:") ? (
                           <a
                             href={message.attachment}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block overflow-hidden rounded-3px border border-gray-100 max-h-48"
+                            className="block overflow-hidden rounded-xl border border-gray-100 max-h-56"
                           >
                             <img
                               src={message.attachment}
                               alt="attachment"
-                              className="object-cover max-h-48 w-full"
+                              className="object-cover max-h-56 w-full"
                             />
                           </a>
                         ) : (
@@ -512,7 +543,7 @@ export default function ChatWindowPage({ selectedUser }) {
                             href={message.attachment}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 p-2 rounded bg-gray-50 text-xs text-blue-600 hover:underline"
+                            className="flex items-center gap-2 p-2 rounded-lg bg-gray-50 text-xs text-blue-600 hover:underline"
                           >
                             <img
                               src="/images/icons/document-attachment-blue.svg"
@@ -527,18 +558,26 @@ export default function ChatWindowPage({ selectedUser }) {
 
                     {message.message && (
                       <p
-                        className="text-[#0b0e11] text-[13px] text-right font-normal leading-[normal] tracking-[0.13px] whitespace-pre-wrap break-words"
+                        className="text-[#111b21] text-[13.5px] font-normal leading-relaxed whitespace-pre-wrap break-words"
                         dir="auto"
                       >
                         {message.message}
                       </p>
                     )}
 
-                    <div className="flex items-center justify-end gap-1.5 text-[#4b5565] text-[11px] tracking-[0.11px]">
+                    <div className="flex items-center justify-end gap-1 text-[#667781] text-[11px] mt-1 select-none">
                       <span dir="auto">{message.time}</span>
-                      <DoubleCheckIcon className="size-4 text-[#079455] shrink-0" />
+                      <DoubleCheckIcon
+                        className={`size-3.5 shrink-0 ${
+                          message.is_read ? "text-[#079455]" : "text-[#9aa4b2]"
+                        }`}
+                      />
                     </div>
+
+                    {/* WhatsApp bottom arrow on the RIGHT */}
+                    <WhatsAppTail isRight={true} color="#ffffff" />
                   </div>
+
                   <UserAvatar
                     avatar={
                       currentUser?.image
@@ -552,26 +591,31 @@ export default function ChatWindowPage({ selectedUser }) {
                 </div>
               </div>
             ) : (
-              /* Receiver##### (User / Customer) - Left Aligned with lavender bubble */
-              <div key={message.id} className="flex flex-col bg-green-400  items-start w-full">
-                <div className="flex gap-2 items-start justify-start max-w-[85%]">
-                  <UserAvatar avatar={`${IMAGE_BASE_URL}${selectedUser?.avatar}`} name={selectedUser?.name} />
-                  <div className="bg-[#ede7fd] shadow-[4px_4px_10px_rgba(0,0,77,0.04)] flex flex-col gap-2 items-start justify-center pt-[16px] pb-[8px] pl-[16px] pr-[24px] rounded-[3px]">
+              /* Receiver (User / Customer) - Fixed to LEFT side */
+              <div key={message.id} className="flex w-full justify-start" dir="ltr">
+                <div className="flex gap-2.5 items-end max-w-[85%]">
+                  <UserAvatar
+                    avatar={`${IMAGE_BASE_URL}${selectedUser?.avatar}`}
+                    name={selectedUser?.name}
+                  />
+                  <div
+                    className="relative bg-[#ede7fd] shadow-[0_1px_2px_rgba(0,0,77,0.06)] border border-purple-200/30 flex flex-col pt-2.5 pb-2 px-3.5 min-w-[95px] rounded-2xl rounded-bl-[2px]"
+                  >
                     {/* Attachment preview if exists */}
                     {message.attachment && (
-                      <div className="w-full mb-1">
+                      <div className="w-full mb-1.5 rounded-xl overflow-hidden">
                         {message.attachment.match(/\.(jpeg|jpg|png|gif|webp)$/i) ||
                         message.attachment.startsWith("blob:") ? (
                           <a
                             href={message.attachment}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block overflow-hidden rounded-3px border border-gray-100 max-h-48"
+                            className="block overflow-hidden rounded-xl border border-gray-100 max-h-56"
                           >
                             <img
                               src={message.attachment}
                               alt="attachment"
-                              className="object-cover max-h-48 w-full"
+                              className="object-cover max-h-56 w-full"
                             />
                           </a>
                         ) : (
@@ -579,7 +623,7 @@ export default function ChatWindowPage({ selectedUser }) {
                             href={message.attachment}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 p-2 rounded bg-white/70 text-xs text-blue-600 hover:underline"
+                            className="flex items-center gap-2 p-2 rounded-lg bg-white/70 text-xs text-blue-600 hover:underline"
                           >
                             <img
                               src="/images/icons/document-attachment-blue.svg"
@@ -594,16 +638,19 @@ export default function ChatWindowPage({ selectedUser }) {
 
                     {message.message && (
                       <p
-                        className="text-[#0b0e11] text-[13px] text-right font-normal leading-[normal] tracking-[0.13px] whitespace-pre-wrap break-words"
+                        className="text-[#111b21] text-[13.5px] font-normal leading-relaxed whitespace-pre-wrap break-words"
                         dir="auto"
                       >
                         {message.message}
                       </p>
                     )}
 
-                    <div className="flex items-center justify-start text-[#4b5565] text-[11px] tracking-[0.11px]">
+                    <div className="flex items-center justify-end text-[#667781] text-[11px] mt-1 select-none">
                       <span dir="auto">{message.time}</span>
                     </div>
+
+                    {/* WhatsApp bottom arrow on the LEFT */}
+                    <WhatsAppTail isRight={false} color="#ede7fd" />
                   </div>
                 </div>
               </div>
@@ -611,18 +658,21 @@ export default function ChatWindowPage({ selectedUser }) {
           })
         )}
 
-        {/* Real-time Typing Indicator from other party */}
+        {/* Real-time Typing Indicator from other party (on the LEFT side) */}
         {isOtherTyping && (
-          <div className="flex flex-col items-start w-full">
-            <div className="flex gap-[8px] items-start justify-start">
+          <div className="flex w-full justify-start" dir="ltr">
+            <div className="flex gap-2.5 items-end justify-start">
               <UserAvatar avatar={`${IMAGE_BASE_URL}${selectedUser?.avatar}`} name={selectedUser?.name} />
-              <div className="bg-[#ede7fd] shadow-[4px_4px_10px_rgba(0,0,77,0.04)] flex items-center gap-1.5 py-3 px-4 rounded-[3px]">
+              <div
+                className="relative bg-[#ede7fd] shadow-[0_1px_2px_rgba(0,0,77,0.06)] border border-purple-200/30 flex items-center gap-1.5 py-2.5 px-3.5 rounded-2xl rounded-bl-[2px]"
+              >
                 <span className="w-2 h-2 rounded-full bg-[#697586] animate-bounce [animation-delay:-0.3s]" />
                 <span className="w-2 h-2 rounded-full bg-[#697586] animate-bounce [animation-delay:-0.15s]" />
                 <span className="w-2 h-2 rounded-full bg-[#697586] animate-bounce" />
-                <span className="text-[#4b5565] text-xs font-normal ms-2">
+                <span className="text-[#4b5565] text-xs font-normal ms-2" dir="auto">
                   {t("Typing...") || "يكتب الآن..."}
                 </span>
+                <WhatsAppTail isRight={false} color="#ede7fd" />
               </div>
             </div>
           </div>
